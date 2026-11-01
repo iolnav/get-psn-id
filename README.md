@@ -38,28 +38,34 @@ Dùng cho các mục đích homebrew, kích hoạt tài khoản ngoại tuyến 
 
 > Trên macOS với Python cài qua Homebrew, hệ thống sẽ chặn `pip install` trực tiếp. Cần tạo venv như sau:
 
-**Bước 1 — Mở Terminal, tạo và kích hoạt venv:**
+**Bước 1 — Mở Terminal, di chuyển vào thư mục chứa mã nguồn vừa tải về:**
 
 ```bash
-cd "/Volumes/DATA/PS5/Exploit/PSN ID"
+cd /duong/dan/den/thu-muc-chua-script
+# Ví dụ: cd ~/Downloads/lay-tai-khoan-psn-id
+```
+
+**Bước 2 — Tạo và kích hoạt venv:**
+
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-> 💡 **Lưu ý ổ cứng ngoài (exFAT/FAT32):** Nếu ổ DATA định dạng exFAT hoặc FAT32 không hỗ trợ symlink, hãy tạo venv tại thư mục home của máy:
+> 💡 **Lưu ý ổ cứng ngoài (exFAT/FAT32):** Nếu bạn đặt thư mục trên USB/ổ cứng ngoài định dạng exFAT hoặc FAT32 (không hỗ trợ symlink), hãy tạo venv tại thư mục home của máy:
 > ```bash
 > python3 -m venv ~/psn-venv
 > source ~/psn-venv/bin/activate
-> cd "/Volumes/DATA/PS5/Exploit/PSN ID"
+> cd /duong/dan/den/thu-muc-chua-script
 > ```
 
-**Bước 2 — Cài đặt thư viện:**
+**Bước 3 — Cài đặt thư viện:**
 
 ```bash
 python3 -m pip install requests
 ```
 
-**Bước 3 — Khởi chạy công cụ:**
+**Bước 4 — Khởi chạy công cụ:**
 
 ```bash
 python3 lay-tai-khoan-psn-id.py
@@ -68,7 +74,7 @@ python3 lay-tai-khoan-psn-id.py
 **Những lần sử dụng sau chỉ cần:**
 
 ```bash
-cd "/Volumes/DATA/PS5/Exploit/PSN ID"
+cd /duong/dan/den/thu-muc-chua-script
 source .venv/bin/activate  # (hoặc source ~/psn-venv/bin/activate)
 python3 lay-tai-khoan-psn-id.py
 ```
@@ -79,10 +85,11 @@ Khi dùng xong, gõ `deactivate` để thoát môi trường ảo.
 
 ### 🪟 Windows
 
-**Bước 1 — Mở Command Prompt hoặc PowerShell**, điều hướng đến thư mục:
+**Bước 1 — Mở Command Prompt hoặc PowerShell**, điều hướng đến thư mục chứa mã nguồn:
 
 ```cmd
-cd "D:\PS5\Exploit\PSN ID"
+cd C:\duong\dan\den\thu-muc-chua-script
+:: Ví dụ: cd %USERPROFILE%\Downloads\lay-tai-khoan-psn-id
 ```
 
 **Bước 2 — Tạo và kích hoạt venv:**
@@ -114,7 +121,7 @@ python lay-tai-khoan-psn-id.py
 **Những lần sau:**
 
 ```cmd
-cd "D:\PS5\Exploit\PSN ID"
+cd C:\duong\dan\den\thu-muc-chua-script
 .venv\Scripts\activate
 python lay-tai-khoan-psn-id.py
 ```
@@ -130,10 +137,10 @@ sudo apt update
 sudo apt install python3 python3-venv python3-pip -y
 ```
 
-**Bước 2 — Tạo và kích hoạt venv:**
+**Bước 2 — Di chuyển vào thư mục và kích hoạt venv:**
 
 ```bash
-cd "/path/to/PSN ID"
+cd /duong/dan/den/thu-muc-chua-script
 python3 -m venv .venv
 source .venv/bin/activate
 ```
@@ -164,10 +171,13 @@ pkg update && pkg upgrade -y
 pkg install python -y
 ```
 
-**Bước 3 — Tạo venv và cài thư viện:**
+**Bước 3 — Di chuyển vào thư mục chứa script, tạo venv và cài thư viện:**
 
 ```bash
-cd ~/psn-id  # hoặc đường dẫn lưu file của bạn
+cd /duong/dan/den/thu-muc-chua-script
+# Hoặc nếu lưu ở bộ nhớ máy: cd /storage/emulated/0/Download/lay-tai-khoan-psn-id
+# Hoặc thư mục home Termux: cd ~/lay-tai-khoan-psn-id
+
 python -m venv .venv
 source .venv/bin/activate
 pip install requests

@@ -38,28 +38,34 @@ Designed for PS4/PS5 homebrew and Offline Account Activation.
 
 > If Python was installed via Homebrew, system-wide `pip install` is blocked. Set up a venv as follows:
 
-**Step 1 — Open Terminal, create and activate the venv:**
+**Step 1 — Open Terminal and navigate to the extracted script directory:**
 
 ```bash
-cd "/Volumes/DATA/PS5/Exploit/PSN ID"
+cd /path/to/extracted-script-folder
+# Example: cd ~/Downloads/lay-tai-khoan-psn-id
+```
+
+**Step 2 — Create and activate the venv:**
+
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-> 💡 **External Drive Note (exFAT/FAT32):** If your external drive format does not support symlinks, create the venv in your home directory:
+> 💡 **External Drive Note (exFAT/FAT32):** If your folder is stored on an external USB/drive formatted with exFAT or FAT32 (which lacks symlink support), create the venv in your home directory instead:
 > ```bash
 > python3 -m venv ~/psn-venv
 > source ~/psn-venv/bin/activate
-> cd "/Volumes/DATA/PS5/Exploit/PSN ID"
+> cd /path/to/extracted-script-folder
 > ```
 
-**Step 2 — Install dependencies:**
+**Step 3 — Install dependencies:**
 
 ```bash
 python3 -m pip install requests
 ```
 
-**Step 3 — Run the tool:**
+**Step 4 — Run the tool:**
 
 ```bash
 python3 lay-tai-khoan-psn-id.py
@@ -68,7 +74,7 @@ python3 lay-tai-khoan-psn-id.py
 **Next time, simply run:**
 
 ```bash
-cd "/Volumes/DATA/PS5/Exploit/PSN ID"
+cd /path/to/extracted-script-folder
 source .venv/bin/activate  # (or source ~/psn-venv/bin/activate)
 python3 lay-tai-khoan-psn-id.py
 ```
@@ -79,10 +85,11 @@ When finished, type `deactivate` to exit the virtual environment.
 
 ### 🪟 Windows
 
-**Step 1 — Open Command Prompt or PowerShell**, and navigate to the project directory:
+**Step 1 — Open Command Prompt or PowerShell**, and navigate to the project folder:
 
 ```cmd
-cd "D:\PS5\Exploit\PSN ID"
+cd C:\path\to\extracted-script-folder
+:: Example: cd %USERPROFILE%\Downloads\lay-tai-khoan-psn-id
 ```
 
 **Step 2 — Create and activate the venv:**
@@ -114,7 +121,7 @@ python lay-tai-khoan-psn-id.py
 **Next time:**
 
 ```cmd
-cd "D:\PS5\Exploit\PSN ID"
+cd C:\path\to\extracted-script-folder
 .venv\Scripts\activate
 python lay-tai-khoan-psn-id.py
 ```
@@ -130,10 +137,10 @@ sudo apt update
 sudo apt install python3 python3-venv python3-pip -y
 ```
 
-**Step 2 — Create and activate the venv:**
+**Step 2 — Navigate to the directory, create and activate the venv:**
 
 ```bash
-cd "/path/to/PSN ID"
+cd /path/to/extracted-script-folder
 python3 -m venv .venv
 source .venv/bin/activate
 ```
@@ -164,10 +171,13 @@ pkg update && pkg upgrade -y
 pkg install python -y
 ```
 
-**Step 3 — Create venv and install dependencies:**
+**Step 3 — Navigate to the script directory, create venv, and install dependencies:**
 
 ```bash
-cd ~/psn-id  # or wherever your script is saved
+cd /path/to/extracted-script-folder
+# Or if stored in device storage: cd /storage/emulated/0/Download/lay-tai-khoan-psn-id
+# Or Termux home: cd ~/lay-tai-khoan-psn-id
+
 python -m venv .venv
 source .venv/bin/activate
 pip install requests
