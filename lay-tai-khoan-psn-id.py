@@ -389,7 +389,7 @@ def screen_language():
         print("║    PSN AccountID Tool  ·  by @iolna      ║")
         print("╠══════════════════════════════════════════╣")
         print("║   1.  Ngôn ngữ : Tiếng Việt              ║")
-        print("║   2.  Language : English                  ║")
+        print("║   2.  Language : English                 ║")
         print("║   q.  Thoát / Exit                       ║")
         print("╚══════════════════════════════════════════╝")
         print()
