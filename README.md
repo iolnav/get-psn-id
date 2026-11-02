@@ -240,19 +240,23 @@ q. Thoát
    | DVD4MESCAwA=      | 0x0003824430f8500d   |
    +-------------------+----------------------+
    ```
-6. Tool sẽ tự động lưu thông tin vào tệp `data.json` nằm cạnh script:
+6. **Lưu nhiều tài khoản vào `data.json`:**
+   - Tool lưu thông tin dưới dạng danh sách nhiều tài khoản trong tệp `data.json`.
+   - Nếu đăng nhập lại một tài khoản đã từng lưu (trùng `user_id` hoặc `psn_id_base64`), tool sẽ tự động ghi đè thông tin mới nhất của tài khoản đó mà không làm ảnh hưởng đến các tài khoản khác.
    ```json
-   {
-     "timestamp": "2026-11-02 22:00:00",
-     "psn_id_base64": "DVD4MESCAwA=",
-     "account_id_hex": "0x0003824430f8500d",
-     "country_code": "vn",
-     "expiration": "2026-11-02T15:56:03.874Z",
-     "language_code": "vi",
-     "online_id": "ten_online",
-     "scopes": "psn:clientapp",
-     "user_id": "123456789012345"
-   }
+   [
+     {
+       "timestamp": "2026-11-02 22:00:00",
+       "psn_id_base64": "DVD4MESCAwA=",
+       "account_id_hex": "0x0003824430f8500d",
+       "country_code": "vn",
+       "expiration": "2026-11-02T15:56:03.874Z",
+       "language_code": "vi",
+       "online_id": "ten_online",
+       "scopes": "psn:clientapp",
+       "user_id": "123456789012345"
+     }
+   ]
    ```
 7. Bấm **Enter** để quay về Menu chính.
 
@@ -262,7 +266,9 @@ q. Thoát
 - Có thể nhập `b` để quay lại menu chính hoặc `q` để thoát.
 
 #### 👉 Chức năng 3: Xem PSN-ID đã lấy
-- Đọc và hiển thị lại dữ liệu từ tệp `data.json` bao gồm thời gian lấy dữ liệu, bảng mã PSN-ID (Base64) & AccountID HEX, kèm theo thông tin tài khoản chi tiết (`online_id`, `user_id`, `country_code`, `language_code`, `expiration`, `scopes`).
+- Đọc và hiển thị danh sách tất cả tài khoản đã lưu trong `data.json`.
+- **Phân trang thông minh:** Mỗi lần hiển thị tối đa **5 tài khoản**.
+- Nếu có nhiều hơn 5 tài khoản, bạn có thể bấm **`c`** để xem tiếp 5 tài khoản tiếp theo lần lượt cho đến hết; hoặc bấm **Enter** để trở về Menu chính, hay gõ **`q`** để thoát ngay.
 - Giúp bạn xem lại ngay mà không phải mở trình duyệt đăng nhập lại.
 - Nếu chưa từng lấy dữ liệu hoặc tệp `data.json` bị mất/hỏng, tool sẽ hiển thị thông báo hướng dẫn sử dụng chức năng 1 trước.
 

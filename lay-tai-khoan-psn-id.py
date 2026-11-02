@@ -130,6 +130,8 @@ UI = {
         "s3_not_found": "⚠️  Chưa có dữ liệu hoặc không tìm thấy tệp data.json!",
         "s3_not_hint" : "👉 Hãy chọn chức năng 1 để lấy PSN-ID trước.",
         "s3_corrupted": "❌  Tệp data.json bị hỏng hoặc không đúng định dạng: {}",
+        "s3_empty"    : "⚠️  Danh sách tài khoản trong data.json đang trống!",
+        "s3_acc_header": "── [Tài khoản {} / {}] ──────────────────────────",
         "s3_time"     : "⏰ Thời gian lấy dữ liệu: {}",
         "s3_details"  : "📋 Chi tiết tài khoản:",
         "s3_online_id": "   • Online ID      : {}",
@@ -138,6 +140,8 @@ UI = {
         "s3_lang"     : "   • Ngôn ngữ       : {}",
         "s3_expire"   : "   • Thời hạn Token : {}",
         "s3_scopes"   : "   • Phạm vi quyền  : {}",
+        "s3_more_prompt": "👉 Bấm 'c' để xem thêm | Enter để về menu chính | 'q' để thoát: ",
+        "s3_all_shown": "✅ Đã hiển thị toàn bộ {} tài khoản.",
         # Bảng kết quả & điều hướng
         "col1"        : "PSN-ID (Base64)",
         "col2"        : "AccountID HEX",
@@ -184,6 +188,8 @@ UI = {
         "s3_not_found": "⚠️  No saved data found or data.json is missing!",
         "s3_not_hint" : "👉 Please use Option 1 to retrieve your PSN-ID first.",
         "s3_corrupted": "❌  data.json is corrupted or invalid: {}",
+        "s3_empty"    : "⚠️  No accounts stored in data.json!",
+        "s3_acc_header": "── [Account {} / {}] ──────────────────────────",
         "s3_time"     : "⏰ Retrieved timestamp: {}",
         "s3_details"  : "📋 Account Details:",
         "s3_online_id": "   • Online ID    : {}",
@@ -192,6 +198,8 @@ UI = {
         "s3_lang"     : "   • Language     : {}",
         "s3_expire"   : "   • Expiration   : {}",
         "s3_scopes"   : "   • Scopes       : {}",
+        "s3_more_prompt": "👉 Press 'c' to view more | Enter for main menu | 'q' to exit: ",
+        "s3_all_shown": "✅ All {} account(s) have been displayed.",
         # Table & navigation
         "col1"        : "PSN-ID (Base64)",
         "col2"        : "AccountID HEX",
@@ -208,9 +216,33 @@ UI = {
 # Hàm tiện ích
 # ══════════════════════════════════════════════════════════════════════════════
 
+def load_accounts():
+    """Đọc danh sách tài khoản từ data.json.
+    Tự động tương thích với cả định dạng danh sách (list) và bản ghi đơn (dict) cũ.
+    Trả về (list_of_accounts, error_code).
+    """
+    if not os.path.exists(DATA_FILE):
+        return None, "NOT_FOUND"
+    try:
+        with open(DATA_FILE, "r", encoding="utf-8") as f:
+            raw = json.load(f)
+        if isinstance(raw, list):
+            return raw, None
+        elif isinstance(raw, dict):
+            # Tương thích ngược với file data.json phiên bản cũ chứa 1 tài khoản
+            return [raw], None
+        else:
+            return None, "INVALID_FORMAT"
+    except Exception as e:
+        return None, str(e)
+
+
 def save_data(psn_id: str, hex_id: str, account_info: dict = None) -> bool:
-    """Lưu thời gian lấy dữ liệu, PSN-ID (Base64), AccountID HEX và chi tiết tài khoản vào tệp data.json."""
-    data = {
+    """Lưu thông tin tài khoản vào tệp data.json dạng danh sách nhiều tài khoản.
+    Nếu tài khoản đã tồn tại (khớp user_id hoặc psn_id_base64), sẽ cập nhật đè thông tin mới.
+    Ngược lại, sẽ thêm mới vào danh sách.
+    """
+    new_account = {
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "psn_id_base64": psn_id,
         "account_id_hex": hex_id
@@ -226,27 +258,38 @@ def save_data(psn_id: str, hex_id: str, account_info: dict = None) -> bool:
         ]
         for field in extra_fields:
             if field in account_info:
-                data[field] = account_info[field]
+                new_account[field] = account_info[field]
+
+    # Đọc danh sách hiện tại nếu có
+    accounts, err = load_accounts()
+    if accounts is None:
+        accounts = []
+
+    target_user_id = str(new_account.get("user_id", "")).strip()
+    target_psn_id = str(new_account.get("psn_id_base64", "")).strip()
+
+    updated = False
+    for i, acc in enumerate(accounts):
+        acc_user_id = str(acc.get("user_id", "")).strip()
+        acc_psn_id = str(acc.get("psn_id_base64", "")).strip()
+
+        # Nhận diện cùng tài khoản nếu trùng user_id (hoặc trùng psn_id_base64)
+        if (target_user_id and acc_user_id and target_user_id == acc_user_id) or \
+           (target_psn_id and acc_psn_id and target_psn_id == acc_psn_id):
+            accounts[i] = new_account
+            updated = True
+            break
+
+    if not updated:
+        accounts.append(new_account)
 
     try:
         with open(DATA_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
+            json.dump(accounts, f, ensure_ascii=False, indent=2)
         return True
     except Exception as e:
         print(f"⚠️  Không thể lưu vào data.json: {e}")
         return False
-
-
-def load_data():
-    """Đọc dữ liệu từ data.json. Trả về (dict, error_code)."""
-    if not os.path.exists(DATA_FILE):
-        return None, "NOT_FOUND"
-    try:
-        with open(DATA_FILE, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        return data, None
-    except Exception as e:
-        return None, str(e)
 
 
 def convert_to_hex(b64: str) -> str:
@@ -436,7 +479,7 @@ def screen_convert(s: dict):
 def screen_view_saved(s: dict):
     print_header(s["s3_title"])
 
-    data, err = load_data()
+    accounts, err = load_accounts()
     if err == "NOT_FOUND":
         print(s["s3_not_found"])
         print(s["s3_not_hint"])
@@ -447,35 +490,66 @@ def screen_view_saved(s: dict):
         input("\n" + s["back_enter"])
         return
 
-    ts = data.get("timestamp", "N/A")
-    psn_id = data.get("psn_id_base64", "N/A")
-    hex_id = data.get("account_id_hex", "N/A")
+    if not accounts:
+        print(s["s3_empty"])
+        input("\n" + s["back_enter"])
+        return
 
-    print(s["s3_time"].format(ts))
-    print()
-    print_table(psn_id, hex_id, s)
-    print()
+    PAGE_SIZE = 5
+    total = len(accounts)
+    idx = 0
 
-    has_extra = any(k in data for k in ["online_id", "user_id", "country_code", "language_code", "expiration", "scopes"])
-    if has_extra:
-        print(s["s3_details"])
-        if "online_id" in data:
-            print(s["s3_online_id"].format(data["online_id"]))
-        if "user_id" in data:
-            print(s["s3_user_id"].format(data["user_id"]))
-        if "country_code" in data:
-            print(s["s3_country"].format(data["country_code"]))
-        if "language_code" in data:
-            print(s["s3_lang"].format(data["language_code"]))
-        if "expiration" in data:
-            print(s["s3_expire"].format(data["expiration"]))
-        if "scopes" in data:
-            print(s["s3_scopes"].format(data["scopes"]))
-        print()
+    while idx < total:
+        chunk = accounts[idx:idx + PAGE_SIZE]
+        for offset, acc in enumerate(chunk):
+            curr_num = idx + offset + 1
+            print(s["s3_acc_header"].format(curr_num, total))
 
-    print(s["credit"])
+            ts = acc.get("timestamp", "N/A")
+            psn_id = acc.get("psn_id_base64", "N/A")
+            hex_id = acc.get("account_id_hex", "N/A")
 
-    input("\n" + s["back_enter"])
+            print(s["s3_time"].format(ts))
+            print()
+            print_table(psn_id, hex_id, s)
+            print()
+
+            has_extra = any(k in acc for k in ["online_id", "user_id", "country_code", "language_code", "expiration", "scopes"])
+            if has_extra:
+                print(s["s3_details"])
+                if "online_id" in acc:
+                    print(s["s3_online_id"].format(acc["online_id"]))
+                if "user_id" in acc:
+                    print(s["s3_user_id"].format(acc["user_id"]))
+                if "country_code" in acc:
+                    print(s["s3_country"].format(acc["country_code"]))
+                if "language_code" in acc:
+                    print(s["s3_lang"].format(acc["language_code"]))
+                if "expiration" in acc:
+                    print(s["s3_expire"].format(acc["expiration"]))
+                if "scopes" in acc:
+                    print(s["s3_scopes"].format(acc["scopes"]))
+                print()
+
+        idx += len(chunk)
+
+        if idx < total:
+            remaining = total - idx
+            ans = input(s["s3_more_prompt"]).strip().lower()
+            if ans == 'q':
+                exit(0)
+            elif ans == 'c':
+                print()
+                continue
+            else:
+                # Bất kỳ phím nào khác (Enter, v.v.) sẽ quay lại menu chính
+                return
+        else:
+            print(s["s3_all_shown"].format(total))
+            print()
+            print(s["credit"])
+            input("\n" + s["back_enter"])
+            return
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Menu chính

@@ -240,19 +240,23 @@ q. Exit
    | DVD4MESCAwA=      | 0x0003824430f8500d   |
    +-------------------+----------------------+
    ```
-6. The credentials are automatically saved to `data.json` alongside the script:
+6. **Multi-account Storage in `data.json`:**
+   - The tool stores credentials as a list of accounts in `data.json`.
+   - If an account has already been saved before (matching `user_id` or `psn_id_base64`), it automatically overwrites that entry with the latest data without affecting other saved accounts.
    ```json
-   {
-     "timestamp": "2026-11-02 22:00:00",
-     "psn_id_base64": "DVD4MESCAwA=",
-     "account_id_hex": "0x0003824430f8500d",
-     "country_code": "vn",
-     "expiration": "2026-11-02T15:56:03.874Z",
-     "language_code": "en",
-     "online_id": "your_online_id",
-     "scopes": "psn:clientapp",
-     "user_id": "123456789012345"
-   }
+   [
+     {
+       "timestamp": "2026-11-02 22:00:00",
+       "psn_id_base64": "DVD4MESCAwA=",
+       "account_id_hex": "0x0003824430f8500d",
+       "country_code": "vn",
+       "expiration": "2026-11-02T15:56:03.874Z",
+       "language_code": "en",
+       "online_id": "your_online_id",
+       "scopes": "psn:clientapp",
+       "user_id": "123456789012345"
+     }
+   ]
    ```
 7. Press **Enter** to return to the Main Menu.
 
@@ -262,7 +266,9 @@ q. Exit
 - Type `b` to go back to the Main Menu, or `q` to exit.
 
 #### 👉 Option 3: View retrieved PSN-ID
-- Reads and displays stored data from `data.json`, including timestamp, the PSN-ID (Base64) & AccountID HEX table, as well as detailed account info (`online_id`, `user_id`, `country_code`, `language_code`, `expiration`, `scopes`).
+- Reads and displays stored accounts from `data.json`.
+- **Smart Pagination:** Shows a maximum of **5 accounts** per view.
+- If more than 5 accounts exist, press **`c`** to view the next 5 accounts sequentially until all are shown; press **Enter** to return to the Main Menu, or **`q`** to exit anytime.
 - Allows you to inspect your credentials anytime without re-logging in.
 - If no data has been saved or `data.json` is missing/corrupted, the tool displays an informative message guiding you to run Option 1 first.
 
