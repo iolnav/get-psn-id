@@ -200,7 +200,7 @@ Khi mở tool, màn hình lựa chọn sẽ hiện ra:
 ║    PSN AccountID Tool  ·  by @iolna      ║
 ╠══════════════════════════════════════════╣
 ║   1.  Ngôn ngữ : Tiếng Việt              ║
-║   2.  Language : English                  ║
+║   2.  Language : English                 ║
 ║   q.  Thoát / Exit                       ║
 ╚══════════════════════════════════════════╝
 ```

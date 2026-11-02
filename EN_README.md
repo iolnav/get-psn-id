@@ -200,7 +200,7 @@ Upon launch, select your preferred language:
 ║    PSN AccountID Tool  ·  by @iolna      ║
 ╠══════════════════════════════════════════╣
 ║   1.  Ngôn ngữ : Tiếng Việt              ║
-║   2.  Language : English                  ║
+║   2.  Language : English                 ║
 ║   q.  Thoát / Exit                       ║
 ╚══════════════════════════════════════════╝
 ```
