@@ -12,6 +12,9 @@ if sys.version_info < (3, 0, 0):
     sys.exit(1)
 
 import platform
+import os
+import json
+from datetime import datetime
 import base64
 from urllib.parse import urlparse, parse_qs, quote
 import pprint
@@ -71,6 +74,9 @@ except ImportError as e:
 # ══════════════════════════════════════════════════════════════════════════════
 # Hằng số
 # ══════════════════════════════════════════════════════════════════════════════
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE  = os.path.join(SCRIPT_DIR, "data.json")
+
 CLIENT_ID     = "ba495a24-818c-472b-b12d-ff231c1b5745"
 CLIENT_SECRET = "mvaiZkRsAsI1IBkY"
 LOGIN_URL = (
@@ -93,7 +99,8 @@ UI = {
         "main_title"  : "MENU CHÍNH",
         "o1_label"    : "1. Lấy PSN-ID (yêu cầu đăng nhập vào trang web PSN)",
         "o2_label"    : "2. Chuyển đổi PSN-ID → AccountID HEX",
-        "o3_label"    : "3. Quay lại",
+        "o3_label"    : "3. Xem PSN-ID đã lấy",
+        "o4_label"    : "4. Quay lại",
         "oq_label"    : "q. Thoát",
         "prompt"      : "Lựa chọn của bạn: ",
         "invalid"     : "⚠️  Lựa chọn không hợp lệ. Vui lòng thử lại.",
@@ -112,11 +119,26 @@ UI = {
         "s1_no_tok"   : "☠️  Không tìm thấy \"access_token\" trong phản hồi:\n{}",
         "s1_psn_id"   : "🍙 PSN-ID (Base64) của bạn:",
         "s1_hex_id"   : "🔑 AccountID HEX của bạn:",
+        "s1_saved"    : "💾 Đã lưu thông tin vào tệp data.json thành công!",
         # Màn hình 2
         "s2_title"    : "CHUYỂN ĐỔI PSN-ID → AccountID HEX",
         "s2_enter"    : "➡️  Nhập PSN-ID (Base64) của bạn:",
         "s2_empty"    : "❌  Chưa nhập PSN-ID.",
         "s2_fail"     : "❌  Chuyển đổi thất bại: {}",
+        # Màn hình 3: Xem PSN-ID đã lấy
+        "s3_title"    : "XEM PSN-ID ĐÃ LẤY",
+        "s3_not_found": "⚠️  Chưa có dữ liệu hoặc không tìm thấy tệp data.json!",
+        "s3_not_hint" : "👉 Hãy chọn chức năng 1 để lấy PSN-ID trước.",
+        "s3_corrupted": "❌  Tệp data.json bị hỏng hoặc không đúng định dạng: {}",
+        "s3_time"     : "⏰ Thời gian lấy dữ liệu: {}",
+        "s3_details"  : "📋 Chi tiết tài khoản:",
+        "s3_online_id": "   • Online ID      : {}",
+        "s3_user_id"  : "   • User ID        : {}",
+        "s3_country"  : "   • Quốc gia       : {}",
+        "s3_lang"     : "   • Ngôn ngữ       : {}",
+        "s3_sub_acc"  : "   • Tài khoản phụ  : {}",
+        "s3_expire"   : "   • Thời hạn Token : {}",
+        "s3_scopes"   : "   • Phạm vi quyền  : {}",
         # Bảng kết quả & điều hướng
         "col1"        : "PSN-ID (Base64)",
         "col2"        : "AccountID HEX",
@@ -132,7 +154,8 @@ UI = {
         "main_title"  : "MAIN MENU",
         "o1_label"    : "1. Get PSN-ID (requires logging into the PSN website)",
         "o2_label"    : "2. Convert PSN-ID → AccountID HEX",
-        "o3_label"    : "3. Back",
+        "o3_label"    : "3. View retrieved PSN-ID",
+        "o4_label"    : "4. Back",
         "oq_label"    : "q. Exit",
         "prompt"      : "Your choice: ",
         "invalid"     : "⚠️  Invalid choice. Please try again.",
@@ -151,11 +174,26 @@ UI = {
         "s1_no_tok"   : "☠️  \"access_token\" is missing in response:\n{}",
         "s1_psn_id"   : "🍙 Your PSN-ID (Base64):",
         "s1_hex_id"   : "🔑 Your AccountID HEX:",
+        "s1_saved"    : "💾 Successfully saved credentials to data.json!",
         # Screen 2
         "s2_title"    : "CONVERT PSN-ID → AccountID HEX",
         "s2_enter"    : "➡️  Enter your PSN-ID (Base64):",
         "s2_empty"    : "❌  No PSN-ID entered.",
         "s2_fail"     : "❌  Conversion failed: {}",
+        # Screen 3: View retrieved PSN-ID
+        "s3_title"    : "VIEW RETRIEVED PSN-ID",
+        "s3_not_found": "⚠️  No saved data found or data.json is missing!",
+        "s3_not_hint" : "👉 Please use Option 1 to retrieve your PSN-ID first.",
+        "s3_corrupted": "❌  data.json is corrupted or invalid: {}",
+        "s3_time"     : "⏰ Retrieved timestamp: {}",
+        "s3_details"  : "📋 Account Details:",
+        "s3_online_id": "   • Online ID    : {}",
+        "s3_user_id"  : "   • User ID      : {}",
+        "s3_country"  : "   • Country      : {}",
+        "s3_lang"     : "   • Language     : {}",
+        "s3_sub_acc"  : "   • Sub-account  : {}",
+        "s3_expire"   : "   • Expiration   : {}",
+        "s3_scopes"   : "   • Scopes       : {}",
         # Table & navigation
         "col1"        : "PSN-ID (Base64)",
         "col2"        : "AccountID HEX",
@@ -171,6 +209,48 @@ UI = {
 # ══════════════════════════════════════════════════════════════════════════════
 # Hàm tiện ích
 # ══════════════════════════════════════════════════════════════════════════════
+
+def save_data(psn_id: str, hex_id: str, account_info: dict = None) -> bool:
+    """Lưu thời gian lấy dữ liệu, PSN-ID (Base64), AccountID HEX và chi tiết tài khoản vào tệp data.json."""
+    data = {
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "psn_id_base64": psn_id,
+        "account_id_hex": hex_id
+    }
+    if account_info and isinstance(account_info, dict):
+        extra_fields = [
+            "country_code",
+            "expiration",
+            "is_sub_account",
+            "language_code",
+            "online_id",
+            "scopes",
+            "user_id"
+        ]
+        for field in extra_fields:
+            if field in account_info:
+                data[field] = account_info[field]
+
+    try:
+        with open(DATA_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+        return True
+    except Exception as e:
+        print(f"⚠️  Không thể lưu vào data.json: {e}")
+        return False
+
+
+def load_data():
+    """Đọc dữ liệu từ data.json. Trả về (dict, error_code)."""
+    if not os.path.exists(DATA_FILE):
+        return None, "NOT_FOUND"
+    try:
+        with open(DATA_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return data, None
+    except Exception as e:
+        return None, str(e)
+
 
 def convert_to_hex(b64: str) -> str:
     """PSN AccountID (Base64) → AccountID HEX
@@ -312,6 +392,12 @@ def screen_get_psn(s: dict):
     print()
     print_table(psn_id_b64, hex_id, s)
     print()
+
+    # Lưu vào data.json
+    if save_data(psn_id_b64, hex_id, acc_info):
+        print(s["s1_saved"])
+        print()
+
     print(s["credit"])
 
     input("\n" + s["back_enter"])
@@ -347,6 +433,57 @@ def screen_convert(s: dict):
     input("\n" + s["back_enter"])
 
 # ══════════════════════════════════════════════════════════════════════════════
+# Màn hình 3: Xem PSN-ID đã lấy
+# ══════════════════════════════════════════════════════════════════════════════
+
+def screen_view_saved(s: dict):
+    print_header(s["s3_title"])
+
+    data, err = load_data()
+    if err == "NOT_FOUND":
+        print(s["s3_not_found"])
+        print(s["s3_not_hint"])
+        input("\n" + s["back_enter"])
+        return
+    elif err is not None:
+        print(s["s3_corrupted"].format(err))
+        input("\n" + s["back_enter"])
+        return
+
+    ts = data.get("timestamp", "N/A")
+    psn_id = data.get("psn_id_base64", "N/A")
+    hex_id = data.get("account_id_hex", "N/A")
+
+    print(s["s3_time"].format(ts))
+    print()
+    print_table(psn_id, hex_id, s)
+    print()
+
+    has_extra = any(k in data for k in ["online_id", "user_id", "country_code", "language_code", "is_sub_account", "expiration", "scopes"])
+    if has_extra:
+        print(s["s3_details"])
+        if "online_id" in data:
+            print(s["s3_online_id"].format(data["online_id"]))
+        if "user_id" in data:
+            print(s["s3_user_id"].format(data["user_id"]))
+        if "country_code" in data:
+            print(s["s3_country"].format(data["country_code"]))
+        if "language_code" in data:
+            print(s["s3_lang"].format(data["language_code"]))
+        if "is_sub_account" in data:
+            sub_val = "Có / Yes" if data["is_sub_account"] else "Không / No"
+            print(s["s3_sub_acc"].format(sub_val))
+        if "expiration" in data:
+            print(s["s3_expire"].format(data["expiration"]))
+        if "scopes" in data:
+            print(s["s3_scopes"].format(data["scopes"]))
+        print()
+
+    print(s["credit"])
+
+    input("\n" + s["back_enter"])
+
+# ══════════════════════════════════════════════════════════════════════════════
 # Menu chính
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -360,6 +497,7 @@ def screen_main(lang: str):
             print(s["o1_label"])
             print(s["o2_label"])
             print(s["o3_label"])
+            print(s["o4_label"])
             print(s["oq_label"])
             print()
             choice = input(s["prompt"]).strip().lower()
@@ -370,6 +508,8 @@ def screen_main(lang: str):
             elif choice == '2':
                 screen_convert(s)
             elif choice == '3':
+                screen_view_saved(s)
+            elif choice == '4':
                 return  # quay lại chọn ngôn ngữ
             elif choice == 'q':
                 exit(0)

@@ -3,6 +3,7 @@
 Công cụ Python song ngữ (Tiếng Việt / English) hỗ trợ:
 1. **Lấy PSN-ID** (dạng Base64) từ tài khoản PlayStation Network và **tự động chuyển đổi sang AccountID HEX** (`0x...`).
 2. **Chuyển đổi PSN-ID → AccountID HEX** độc lập dành cho những ai đã có sẵn mã PSN-ID.
+3. **Lưu và xem lại thông tin:** Tự động lưu thông tin vào tệp `data.json` (thời gian lấy, PSN-ID Base64, AccountID HEX) để tiện tra cứu lại mà không cần đăng nhập nhiều lần.
 
 Dùng cho các mục đích homebrew, kích hoạt tài khoản ngoại tuyến (Offline Activation) trên PS4/PS5.
 
@@ -14,6 +15,8 @@ Dùng cho các mục đích homebrew, kích hoạt tài khoản ngoại tuyến 
 
 - 🌐 **Hỗ trợ 2 ngôn ngữ:** Tiếng Việt và English ngay khi khởi động tool.
 - ⚡ **Tự động chuyển đổi:** Sau khi đăng nhập và lấy mã PSN-ID, tool tự động chuyển đổi sang định dạng `AccountID HEX` (16 ký tự kèm tiền tố `0x`) mà không cần làm thủ công.
+- 💾 **Tự động lưu vào data.json:** Lưu lại thời gian lấy dữ liệu, PSN-ID (Base64) và AccountID HEX vào tệp `data.json` ngay cạnh script.
+- 📂 **Xem lại mã đã lấy (Tùy chọn 3):** Dễ dàng xem lại thông tin đã lưu trước đó mà không phải thao tác đăng nhập lại từ đầu.
 - 🔄 **Chế độ chuyển đổi nhanh:** Nhập trực tiếp mã PSN-ID có sẵn để nhận ngay AccountID HEX.
 - 🧭 **Điều hướng linh hoạt:** Ở bất cứ bước nhập liệu nào, bạn có thể bấm `b` để quay lại menu chính hoặc `q` để thoát.
 - 💬 **Thông báo chào tạm biệt cá nhân hoá:** Tự động hiển thị lời chào theo đúng ngôn ngữ bạn đang chọn.
@@ -219,7 +222,8 @@ Dựa trên ngôn ngữ đã chọn, giao diện sẽ hiển thị:
 
 1. Lấy PSN-ID (yêu cầu đăng nhập vào trang web PSN)
 2. Chuyển đổi PSN-ID → AccountID HEX
-3. Quay lại
+3. Xem PSN-ID đã lấy
+4. Quay lại
 q. Thoát
 ```
 
@@ -236,12 +240,32 @@ q. Thoát
    | DVD4MESCAwA=      | 0x0003824430f8500d   |
    +-------------------+----------------------+
    ```
-6. Bấm **Enter** để quay về Menu chính.
+6. Tool sẽ tự động lưu thông tin vào tệp `data.json` nằm cạnh script:
+   ```json
+   {
+     "timestamp": "2026-11-02 22:00:00",
+     "psn_id_base64": "DVD4MESCAwA=",
+     "account_id_hex": "0x0003824430f8500d",
+     "country_code": "vn",
+     "expiration": "2026-11-02T15:56:03.874Z",
+     "is_sub_account": false,
+     "language_code": "vi",
+     "online_id": "ten_online",
+     "scopes": "psn:clientapp",
+     "user_id": "123456789012345"
+   }
+   ```
+7. Bấm **Enter** để quay về Menu chính.
 
 #### 👉 Chức năng 2: Chuyển đổi PSN-ID → AccountID HEX
 - Dành cho những ai đã có sẵn mã PSN-ID Base64.
 - Nhập mã vào, tool sẽ lập tức tính toán và in bảng kết quả tương ứng.
 - Có thể nhập `b` để quay lại menu chính hoặc `q` để thoát.
+
+#### 👉 Chức năng 3: Xem PSN-ID đã lấy
+- Đọc và hiển thị lại dữ liệu từ tệp `data.json` bao gồm thời gian lấy dữ liệu, bảng mã PSN-ID (Base64) & AccountID HEX, kèm theo thông tin tài khoản chi tiết (`online_id`, `user_id`, `country_code`, `language_code`, `is_sub_account`, `expiration`, `scopes`).
+- Giúp bạn xem lại ngay mà không phải mở trình duyệt đăng nhập lại.
+- Nếu chưa từng lấy dữ liệu hoặc tệp `data.json` bị mất/hỏng, tool sẽ hiển thị thông báo hướng dẫn sử dụng chức năng 1 trước.
 
 ---
 
@@ -249,6 +273,7 @@ q. Thoát
 
 - Script chỉ tương tác trực tiếp với máy chủ chính thức của Sony (`sonyentertainmentnetwork.com`) qua giao thức HTTPS.
 - Không có bất kỳ máy chủ bên thứ ba nào can thiệp.
+- Tệp `data.json` chỉ lưu trữ cục bộ trên máy của bạn (đã được cấu hình trong `.gitignore` để không bị đẩy lên GitHub).
 - Không chia sẻ các URL hoặc mã Token nhạy cảm ra ngoài.
 
 ---
@@ -258,6 +283,7 @@ q. Thoát
 ```text
 PSN ID/
 ├── lay-tai-khoan-psn-id.py    # Script chính (tích hợp song ngữ & đa tính năng)
+├── data.json                  # Tệp lưu thông tin tự động sinh ra sau khi lấy ID (tuỳ chọn)
 ├── README.md                  # Hướng dẫn sử dụng tiếng Việt (tệp này)
 └── EN_README.md               # Hướng dẫn sử dụng tiếng Anh
 ```

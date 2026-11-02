@@ -3,6 +3,7 @@
 A bilingual (Vietnamese / English) Python tool that:
 1. **Retrieves your PSN-ID** (Base64 encoded) from your PlayStation Network account and **automatically converts it into AccountID HEX** (`0x...`).
 2. **Converts PSN-ID → AccountID HEX** standalone for users who already have their PSN-ID.
+3. **Saves & views retrieved credentials:** Automatically saves your credentials to `data.json` (timestamp, PSN-ID Base64, AccountID HEX) so you can review them anytime without re-authenticating.
 
 Designed for PS4/PS5 homebrew and Offline Account Activation.
 
@@ -14,6 +15,8 @@ Designed for PS4/PS5 homebrew and Offline Account Activation.
 
 - 🌐 **Bilingual Support:** Switch between Vietnamese and English right at startup.
 - ⚡ **Automatic Conversion:** After retrieving the PSN-ID, it is automatically converted into the 16-character `AccountID HEX` format (prefixed with `0x`) with no extra prompt required.
+- 💾 **Auto-Save to data.json:** Automatically stores retrieval timestamp, PSN-ID (Base64), and AccountID HEX in `data.json` alongside the script.
+- 📂 **View Saved PSN-ID (Option 3):** Easily view previously saved credentials without logging into PSN again.
 - 🔄 **Quick Standalone Converter:** Input an existing Base64 PSN-ID to get the AccountID HEX output instantly.
 - 🧭 **Intuitive Navigation:** Type `b` at any input prompt to return to the main menu, or `q` to exit.
 - 💬 **Context-Aware Farewell Messages:** Exit messages adapt automatically to your selected language.
@@ -219,7 +222,8 @@ Depending on the chosen language, the menu will be displayed:
 
 1. Get PSN-ID (requires logging into the PSN website)
 2. Convert PSN-ID → AccountID HEX
-3. Back
+3. View retrieved PSN-ID
+4. Back
 q. Exit
 ```
 
@@ -236,12 +240,32 @@ q. Exit
    | DVD4MESCAwA=      | 0x0003824430f8500d   |
    +-------------------+----------------------+
    ```
-6. Press **Enter** to return to the Main Menu.
+6. The credentials are automatically saved to `data.json` alongside the script:
+   ```json
+   {
+     "timestamp": "2026-11-02 22:00:00",
+     "psn_id_base64": "DVD4MESCAwA=",
+     "account_id_hex": "0x0003824430f8500d",
+     "country_code": "vn",
+     "expiration": "2026-11-02T15:56:03.874Z",
+     "is_sub_account": false,
+     "language_code": "en",
+     "online_id": "your_online_id",
+     "scopes": "psn:clientapp",
+     "user_id": "123456789012345"
+   }
+   ```
+7. Press **Enter** to return to the Main Menu.
 
 #### 👉 Option 2: Convert PSN-ID → AccountID HEX
 - For users who already possess their Base64 PSN-ID.
 - Paste the string, and the tool will immediately compute and output the result table.
 - Type `b` to go back to the Main Menu, or `q` to exit.
+
+#### 👉 Option 3: View retrieved PSN-ID
+- Reads and displays stored data from `data.json`, including timestamp, the PSN-ID (Base64) & AccountID HEX table, as well as detailed account info (`online_id`, `user_id`, `country_code`, `language_code`, `is_sub_account`, `expiration`, `scopes`).
+- Allows you to inspect your credentials anytime without re-logging in.
+- If no data has been saved or `data.json` is missing/corrupted, the tool displays an informative message guiding you to run Option 1 first.
 
 ---
 
@@ -249,6 +273,7 @@ q. Exit
 
 - The script communicates exclusively with Sony's official servers (`sonyentertainmentnetwork.com`) using HTTPS.
 - No third-party servers or relays are involved.
+- `data.json` is stored locally only (configured in `.gitignore` so it won't be committed to Git/GitHub).
 - Never share sensitive authentication tokens or credentials with others.
 
 ---
@@ -258,6 +283,7 @@ q. Exit
 ```text
 PSN ID/
 ├── lay-tai-khoan-psn-id.py    # Main script (bilingual, unified tool)
+├── data.json                  # Auto-generated saved credentials file (optional)
 ├── README.md                  # Vietnamese user guide
 └── EN_README.md               # English user guide (this file)
 ```
