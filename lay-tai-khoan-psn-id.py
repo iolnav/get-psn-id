@@ -136,7 +136,6 @@ UI = {
         "s3_user_id"  : "   • User ID        : {}",
         "s3_country"  : "   • Quốc gia       : {}",
         "s3_lang"     : "   • Ngôn ngữ       : {}",
-        "s3_sub_acc"  : "   • Tài khoản phụ  : {}",
         "s3_expire"   : "   • Thời hạn Token : {}",
         "s3_scopes"   : "   • Phạm vi quyền  : {}",
         # Bảng kết quả & điều hướng
@@ -191,7 +190,6 @@ UI = {
         "s3_user_id"  : "   • User ID      : {}",
         "s3_country"  : "   • Country      : {}",
         "s3_lang"     : "   • Language     : {}",
-        "s3_sub_acc"  : "   • Sub-account  : {}",
         "s3_expire"   : "   • Expiration   : {}",
         "s3_scopes"   : "   • Scopes       : {}",
         # Table & navigation
@@ -221,7 +219,6 @@ def save_data(psn_id: str, hex_id: str, account_info: dict = None) -> bool:
         extra_fields = [
             "country_code",
             "expiration",
-            "is_sub_account",
             "language_code",
             "online_id",
             "scopes",
@@ -459,7 +456,7 @@ def screen_view_saved(s: dict):
     print_table(psn_id, hex_id, s)
     print()
 
-    has_extra = any(k in data for k in ["online_id", "user_id", "country_code", "language_code", "is_sub_account", "expiration", "scopes"])
+    has_extra = any(k in data for k in ["online_id", "user_id", "country_code", "language_code", "expiration", "scopes"])
     if has_extra:
         print(s["s3_details"])
         if "online_id" in data:
@@ -470,9 +467,6 @@ def screen_view_saved(s: dict):
             print(s["s3_country"].format(data["country_code"]))
         if "language_code" in data:
             print(s["s3_lang"].format(data["language_code"]))
-        if "is_sub_account" in data:
-            sub_val = "Có / Yes" if data["is_sub_account"] else "Không / No"
-            print(s["s3_sub_acc"].format(sub_val))
         if "expiration" in data:
             print(s["s3_expire"].format(data["expiration"]))
         if "scopes" in data:

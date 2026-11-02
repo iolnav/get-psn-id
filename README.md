@@ -248,7 +248,6 @@ q. Thoát
      "account_id_hex": "0x0003824430f8500d",
      "country_code": "vn",
      "expiration": "2026-11-02T15:56:03.874Z",
-     "is_sub_account": false,
      "language_code": "vi",
      "online_id": "ten_online",
      "scopes": "psn:clientapp",
@@ -263,7 +262,7 @@ q. Thoát
 - Có thể nhập `b` để quay lại menu chính hoặc `q` để thoát.
 
 #### 👉 Chức năng 3: Xem PSN-ID đã lấy
-- Đọc và hiển thị lại dữ liệu từ tệp `data.json` bao gồm thời gian lấy dữ liệu, bảng mã PSN-ID (Base64) & AccountID HEX, kèm theo thông tin tài khoản chi tiết (`online_id`, `user_id`, `country_code`, `language_code`, `is_sub_account`, `expiration`, `scopes`).
+- Đọc và hiển thị lại dữ liệu từ tệp `data.json` bao gồm thời gian lấy dữ liệu, bảng mã PSN-ID (Base64) & AccountID HEX, kèm theo thông tin tài khoản chi tiết (`online_id`, `user_id`, `country_code`, `language_code`, `expiration`, `scopes`).
 - Giúp bạn xem lại ngay mà không phải mở trình duyệt đăng nhập lại.
 - Nếu chưa từng lấy dữ liệu hoặc tệp `data.json` bị mất/hỏng, tool sẽ hiển thị thông báo hướng dẫn sử dụng chức năng 1 trước.
 

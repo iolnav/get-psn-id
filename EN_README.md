@@ -248,7 +248,6 @@ q. Exit
      "account_id_hex": "0x0003824430f8500d",
      "country_code": "vn",
      "expiration": "2026-11-02T15:56:03.874Z",
-     "is_sub_account": false,
      "language_code": "en",
      "online_id": "your_online_id",
      "scopes": "psn:clientapp",
@@ -263,7 +262,7 @@ q. Exit
 - Type `b` to go back to the Main Menu, or `q` to exit.
 
 #### 👉 Option 3: View retrieved PSN-ID
-- Reads and displays stored data from `data.json`, including timestamp, the PSN-ID (Base64) & AccountID HEX table, as well as detailed account info (`online_id`, `user_id`, `country_code`, `language_code`, `is_sub_account`, `expiration`, `scopes`).
+- Reads and displays stored data from `data.json`, including timestamp, the PSN-ID (Base64) & AccountID HEX table, as well as detailed account info (`online_id`, `user_id`, `country_code`, `language_code`, `expiration`, `scopes`).
 - Allows you to inspect your credentials anytime without re-logging in.
 - If no data has been saved or `data.json` is missing/corrupted, the tool displays an informative message guiding you to run Option 1 first.
 
