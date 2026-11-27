@@ -41,6 +41,18 @@ Dùng cho các mục đích homebrew, kích hoạt tài khoản ngoại tuyến 
 
 > Trên macOS với Python cài qua Homebrew, hệ thống sẽ chặn `pip install` trực tiếp. Cần tạo venv như sau:
 
+**Bước 0 — Cài đặt Python 3 (nếu chưa có) & kiểm tra phiên bản (cần 3.6+):**
+
+```bash
+python3 --version
+```
+
+Nếu chưa có hoặc phiên bản cũ hơn 3.6, cài đặt qua [Homebrew](https://brew.sh/) (khuyến nghị) hoặc tải bộ cài từ [python.org](https://www.python.org/downloads/macos/):
+
+```bash
+brew install python3
+```
+
 **Bước 1 — Mở Terminal, di chuyển vào thư mục chứa mã nguồn vừa tải về:**
 
 ```bash
@@ -88,6 +100,22 @@ Khi dùng xong, gõ `deactivate` để thoát môi trường ảo.
 
 ### 🪟 Windows
 
+**Bước 0 — Cài đặt Python 3 (nếu chưa có) & kiểm tra phiên bản (cần 3.6+):**
+
+Mở Command Prompt hoặc PowerShell và kiểm tra:
+
+```cmd
+python --version
+```
+
+Nếu chưa có hoặc phiên bản cũ hơn 3.6, bạn có thể cài nhanh bằng `winget` hoặc tải từ [python.org](https://www.python.org/downloads/windows/):
+
+```cmd
+winget install Python.Python.3.12
+```
+
+> ⚠️ **Lưu ý khi cài từ file `.exe` trên python.org:** Nhớ tích chọn **"Add python.exe to PATH"** ở màn hình cài đặt đầu tiên, sau đó mở lại cửa sổ Terminal mới.
+
 **Bước 1 — Mở Command Prompt hoặc PowerShell**, điều hướng đến thư mục chứa mã nguồn:
 
 ```cmd
@@ -133,11 +161,12 @@ python lay-tai-khoan-psn-id.py
 
 ### 🐧 Linux (Ubuntu / Debian)
 
-**Bước 1 — Cài đặt các gói cần thiết:**
+**Bước 1 — Cài đặt các gói cần thiết & kiểm tra phiên bản (cần 3.6+):**
 
 ```bash
 sudo apt update
 sudo apt install python3 python3-venv python3-pip -y
+python3 --version
 ```
 
 **Bước 2 — Di chuyển vào thư mục và kích hoạt venv:**
@@ -172,6 +201,7 @@ python3 lay-tai-khoan-psn-id.py
 termux-setup-storage
 pkg update && pkg upgrade -y
 pkg install python -y
+python --version
 ```
 
 **Bước 3 — Di chuyển vào thư mục chứa script, tạo venv và cài thư viện:**
